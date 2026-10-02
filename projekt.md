@@ -16,6 +16,10 @@ Was hier steht, gilt für das ganze Repo und für alle, die daran arbeiten.
   dessen Ordner.
 - Alles ausserhalb der Knotenordner (`projekt.md`, `README.md`, `docs/`,
   `shared/`, `.gitignore`) gehört dem **Projekt-Chat**.
+- **Neue Knoten legt der Projekt-Chat an**, aber nur als Grundgerüst:
+  Pflichtdateien, Grundkonfiguration und Vorlage für die Zugangsdaten. Danach
+  übernimmt ein eigener Chat den Knoten, und der Projekt-Chat arbeitet dort
+  nicht mehr.
 - In einem fremden Bereich darf nur gelesen werden. Ändern, Umbenennen und
   Löschen sind dort verboten, auch bei kleinen oder schon erledigten Dingen.
 
