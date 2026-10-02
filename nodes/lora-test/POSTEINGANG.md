@@ -1,6 +1,6 @@
 # Posteingang
 
-Aufträge an diesen Knoten. Regeln: siehe [projekt.md](../projekt.md), Abschnitt «Posteingang».
+Aufträge an diesen Knoten. Regeln: siehe [projekt.md](../../projekt.md), Abschnitt «Posteingang».
 
 ## 2026-10-02 – Knoten an die Projektabmachungen anpassen
 
@@ -29,7 +29,7 @@ Entscheidung. Rückmeldung bitte in den Posteingang des Projekt-Chats
 ## 2026-10-02 – Verweis auf projekt.md im Posteingang anpassen
 
 **Von:** Projekt-Chat
-**Status:** offen
+**Status:** erledigt (2026-10-02)
 
 Seit dem Umzug nach `nodes/lora-test/` zeigt der Verweis oben in dieser Datei
 (`../projekt.md`) ins Leere. Richtig ist jetzt `../../projekt.md`, so wie im
