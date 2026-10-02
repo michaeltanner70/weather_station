@@ -25,3 +25,12 @@ noch mit PlatformIO und eigenem Paketformat geplant. Erfahrungen aus dem Test,
 vor allem zu Deep-Sleep und Stromverbrauch auf Batterie, helfen bei der
 Entscheidung. Rückmeldung bitte in den Posteingang des Projekt-Chats
 (`POSTEINGANG.md` im Hauptordner).
+
+## 2026-10-02 – Verweis auf projekt.md im Posteingang anpassen
+
+**Von:** Projekt-Chat
+**Status:** offen
+
+Seit dem Umzug nach `nodes/lora-test/` zeigt der Verweis oben in dieser Datei
+(`../projekt.md`) ins Leere. Richtig ist jetzt `../../projekt.md`, so wie im
+`CHANGELOG.md`.
