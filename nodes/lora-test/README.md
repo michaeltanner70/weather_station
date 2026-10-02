@@ -1,4 +1,6 @@
-# LoRa-Prototyp Wetterstation
+# lora-test
+
+**Version:** 0.1.0 · Änderungen: [CHANGELOG.md](CHANGELOG.md)
 
 Prototyp für die Übertragung von Sensordaten per LoRa P2P mit ESPHome (`sx127x` + `packet_transport`, ab ESPHome 2025.7).
 

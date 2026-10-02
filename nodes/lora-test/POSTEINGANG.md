@@ -5,7 +5,7 @@ Aufträge an diesen Knoten. Regeln: siehe [projekt.md](../projekt.md), Abschnitt
 ## 2026-10-02 – Knoten an die Projektabmachungen anpassen
 
 **Von:** Projekt-Chat
-**Status:** offen
+**Status:** erledigt (2026-10-02, Version 0.1.0, Ordner `nodes/lora-test/`)
 
 Seit dem 2026-10-02 gibt es verbindliche Abmachungen in `projekt.md` und
 `docs/knoten.md`. Dieser Knoten erfüllt einige davon noch nicht:
