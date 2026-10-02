@@ -1,0 +1,175 @@
+# LoRa-Prototyp – Sender
+# Board: ESP32 DevKitC + RF96 (SX1276, 868 MHz)
+# Sendet Dummy-Wetterdaten via packet_transport über LoRa.
+
+substitutions:
+  name: lora-sender
+  friendly_name: LoRa Sender
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_key_sender
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# ---------------------------------------------------------------
+# Funk: RF96 an VSPI
+# RF96  -> DevKitC
+# SCK   -> GPIO18
+# MISO  -> GPIO19
+# MOSI  -> GPIO23
+# NSS   -> GPIO5
+# RST   -> GPIO14
+# DIO0  -> GPIO26
+# VCC   -> 3V3, GND -> GND
+# Nie ohne Antenne senden!
+# ---------------------------------------------------------------
+spi:
+  clk_pin: GPIO18
+  miso_pin: GPIO19
+  mosi_pin: GPIO23
+
+sx127x:
+  cs_pin: GPIO5
+  rst_pin: GPIO14
+  dio0_pin: GPIO26
+  modulation: LORA
+  frequency: 868100000
+  bandwidth: 125_0kHz
+  spreading_factor: 9
+  coding_rate: CR_4_5
+  preamble_size: 8
+  crc_enable: true
+  pa_pin: BOOST
+  pa_power: 14          # 14 dBm = 25 mW (Grenze 868,0–868,6 MHz)
+  rx_start: false       # Sender empfängt nicht
+
+packet_transport:
+  - platform: sx127x
+    update_interval: 60s   # Duty Cycle 1 %, siehe README
+    encryption: !secret lora_key
+    sensors:
+      # broadcast_id kurz halten -> kleinere Pakete, weniger Airtime
+      - id: temperature
+        broadcast_id: t
+      - id: humidity
+        broadcast_id: h
+      - id: pressure
+        broadcast_id: p
+      - id: wind_speed
+        broadcast_id: ws
+      - id: wind_dir
+        broadcast_id: wd
+      - id: rain
+        broadcast_id: r
+      - id: seq
+        broadcast_id: n
+
+# ---------------------------------------------------------------
+# Dummy-Sensoren (Random Walk, damit die Werte plausibel wandern)
+# ---------------------------------------------------------------
+globals:
+  - id: seq_counter
+    type: uint32_t
+    initial_value: "0"
+
+sensor:
+  - platform: template
+    id: temperature
+    name: "Temperatur"
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: |-
+      static float v = 15.0f;
+      v += (random_float() - 0.5f) * 0.6f;
+      v = clamp(v, -20.0f, 40.0f);
+      return v;
+
+  - platform: template
+    id: humidity
+    name: "Feuchte"
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      static float v = 65.0f;
+      v += (random_float() - 0.5f) * 3.0f;
+      v = clamp(v, 20.0f, 100.0f);
+      return v;
+
+  - platform: template
+    id: pressure
+    name: "Luftdruck"
+    unit_of_measurement: "hPa"
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: |-
+      static float v = 1013.0f;
+      v += (random_float() - 0.5f) * 0.4f;
+      v = clamp(v, 960.0f, 1050.0f);
+      return v;
+
+  - platform: template
+    id: wind_speed
+    name: "Wind"
+    unit_of_measurement: "m/s"
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: |-
+      static float v = 3.0f;
+      v += (random_float() - 0.5f) * 1.5f;
+      v = clamp(v, 0.0f, 30.0f);
+      return v;
+
+  - platform: template
+    id: wind_dir
+    name: "Windrichtung"
+    unit_of_measurement: "°"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      static float v = 270.0f;
+      v += (random_float() - 0.5f) * 40.0f;
+      if (v < 0) v += 360.0f;
+      if (v >= 360.0f) v -= 360.0f;
+      return v;
+
+  - platform: template
+    id: rain
+    name: "Regen total"
+    unit_of_measurement: "mm"
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: |-
+      // Simuliert Wippe à 0,2 mm, gelegentlich ein paar Kippungen
+      static float v = 0.0f;
+      if (random_float() < 0.2f) v += 0.2f * (1 + (int)(random_float() * 3));
+      return v;
+
+  # Paketzähler – der Empfänger erkennt damit verlorene Pakete
+  - platform: template
+    id: seq
+    name: "Sequenz"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      id(seq_counter) += 1;
+      return (float) id(seq_counter);
